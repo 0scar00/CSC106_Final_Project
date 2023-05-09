@@ -1,0 +1,30 @@
+var currentScene = 0;
+
+
+
+var splashScreen = function()
+{
+  
+};
+
+
+// Code For Playing Screen (Scene 1)
+var playGame= function()
+{
+
+};
+
+
+// Code For End Screen (Scene 2)
+var endGame = function() {
+    
+};
+
+splashScreen();
+// Draws The Screens (Scenes 0, 1, and 2)
+var draw = function() {
+    if (currentScene===0) {splashScreen();}
+     else if (currentScene === 1) {playGame();}
+    else if (currentScene === 2) {endGame();}
+        
+};
