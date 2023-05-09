@@ -1,7 +1,6 @@
 var currentScene = 0;
 
 
-
 /* RESIZABLE BITMOJI CODE*/
 var drawResizeBitmoji = function(bitmojiX,bitmojiY,bitmojiHeight){
 
