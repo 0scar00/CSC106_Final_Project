@@ -1,5 +1,5 @@
-var currentScene = 0;
-var playerPoints = 0;
+var currentScene = 1;
+
 
 var numBitmoji = 1;  /*variable to set the number of bitmojis*/
 
@@ -150,6 +150,11 @@ var char = function(x, y, h) {
     image(getImage("avatars/starky-sapling"), x, y, h, h);
 };
 
+ //Character function
+var char1 = function(x, y, h) {
+    image(getImage("avatars/aqualine-ultimate"), x, y, h, h);
+};
+
 
 
 // Creates Start Button 
@@ -204,7 +209,6 @@ var homeBtn = new Button({
     height:44,
     label: "Home",
     onClick: function() {
-        //changes the scene to scene 0 which is the home screen
         currentScene = 0;
     }
 });
@@ -221,20 +225,20 @@ var xPositionsChar = [];
 var yPositionsChar = [];
 var bitmojiSpeedChar = [];
 
-/* For loop for the array's random values */
+// For loop for the array's values 
 for(var i = 0; i < numBitmoji; i++)
 {
     xPositions.push(random(50,350));
     yPositions.push(random(50,350));
-    bitmojiSpeed.push(round(random(0.6,2.4)));
+    bitmojiSpeed.push(2);
 }
 
-/* For loop for the array's random values */
+// For loop for the array's values 
 for(var j = 0; j < charNum; j++)
 {
     xPositionsChar.push(random(50,350));
     yPositionsChar.push(random(50,350));
-    bitmojiSpeedChar.push(round(random(0.6,2.4)));
+    bitmojiSpeedChar.push(2);
 }
     
 
@@ -246,19 +250,55 @@ mouseClicked = function() {
     }
   
 
-else if(currentScene===2) {
+else if(currentScene===3) {
         homeBtn.handleMouseClick();
 
 }
+
+else if(currentScene===4) {
+    homeBtn.handleMouseClick();
+}
+
 
 for(var i = 0; i < xPositions.length; i++)
         {
             if(mouseX > xPositions[i] - 25 && 
                mouseX < xPositions[i] + 25 &&
                mouseY > yPositions[i] - 1 &&
-               mouseY < yPositions[i] + 50)
+               mouseY < yPositions[i] + 50 &&
+               currentScene === 1)
                {
-                   yPositions[i] = -400;
+                   currentScene = 2;
+               }
+               
+               else if(mouseX > xPositions[i] - 25 && 
+               mouseX < xPositions[i] + 25 &&
+               mouseY > yPositions[i] - 1 &&
+               mouseY < yPositions[i] + 50 &&
+               currentScene === 2)
+               {
+                   currentScene = 3;
+               }
+        }
+
+for(var i = 0; i < xPositionsChar.length; i++)
+        {
+            if(mouseX > xPositionsChar[i] - 25 && 
+               mouseX < xPositionsChar[i] + 25 &&
+               mouseY > yPositionsChar[i] - 1 &&
+               mouseY < yPositionsChar[i] + 50 &&
+               currentScene === 1)
+               {
+                   currentScene = 4;
+               }
+               
+               else if(mouseX > xPositionsChar[i] - 25 && 
+               mouseX < xPositionsChar[i] + 25 &&
+               mouseY > yPositionsChar[i] - 1 &&
+               mouseY < yPositionsChar[i] + 50 &&
+               currentScene === 2)
+               {
+                   currentScene = 4;
                }
         }
 
@@ -270,7 +310,7 @@ var splashScreen = function()
 background(255, 199, 255);
 textSize(31);
 fill(0, 0, 0);
-text("Where is Waldo?", 80, 33, 287, 100);
+text("Where is The Bitmoji?", 58, 41, 332, 100);
 
 var bitmojiText = function(){
     //bitmoji code goes here
@@ -289,18 +329,59 @@ var bitmojiText = function(){
     drawResizeBitmoji(36,168,103);
     drawMe(249,185,83);
 StartButton.draw();
+fill(255, 199, 255);
 ellipse(mouseX, mouseY, 15,15);
 
 };
 
-
-/* Draws the moving bitmojis */
-var gameScene = function(array) 
+// Screen 2 code
+var gameScene1 = function(array) 
 {
-    background(255, 255, 255);
+  background(21, 22, 89);
+    textSize(95);
+    text("Find:", 72,-10);
+    drawMe(294,-11,60);
     fill(255, 255, 255);
     ellipse(mouseX,mouseY,20,20);
-  
+    
+    for(var i = 0; i < xPositions.length; i++)
+    {
+        
+    
+        drawMe(xPositions[i], yPositions[i] ,19);
+        xPositions[i] += bitmojiSpeed[i];
+        
+        if(xPositions[i] > 400)
+        {
+            xPositions[i] = random(-40, 40);
+            xPositions[i] += bitmojiSpeed[i];
+            
+        }
+    } 
+    
+    
+    for(var j = 0; j < xPositionsChar.length; j++)
+    {
+        char1(xPositionsChar[j],yPositionsChar[j],41);
+        xPositionsChar[j] += bitmojiSpeedChar[j];
+        
+        if(xPositionsChar[j] > 400)
+        {
+            xPositionsChar[j] = random(-40, 40);
+            xPositionsChar[j] += bitmojiSpeedChar[j];
+            
+        }
+    } 
+    
+};
+
+// Screen 3 code
+var gameScene2 = function(array) 
+{
+    background(28, 25, 28);
+    textSize(60);
+    text("Find:", 104,-12);
+    drawResizeBitmoji(236,-11,36);
     for(var i = 0; i < xPositions.length; i++)
     {
         drawResizeBitmoji(xPositions[i],yPositions[i],31);
@@ -329,23 +410,36 @@ var gameScene = function(array)
     } 
 };
 
-
-
-// Code For End Screen (Scene 2)
-var endGame = function() {
+// Code For Winner Screen (Scene 3)
+var endGameW = function() {
     background(0, 0, 0);
     textSize(70);
     fill(255, 0, 0);
-    text("Game Over", 9,142, 389,176);
-    textSize(33);
-    text("Score:", 20, 300, 195, 100);
+    text("You Win!!!", 31,142, 389,176);
     strokeWeight(10);
     stroke(255, 0, 0);
     line(368,224,15,223);
-    line(114,346,22,346);
-    ellipse(mouseX, mouseY, 15,15);
     homeBtn.draw();
+    strokeWeight(2);
+    fill(0, 0, 0);
+    ellipse(mouseX, mouseY, 15,15);
+};
 
+//Code for loser Screen (Scene 4)
+var endGameL = function() {
+    background(0, 0, 0);
+    textSize(70);
+    fill(255, 0, 0);
+    text("You Lose, try again.", 31,104, 418,221);
+    textSize(33);
+    strokeWeight(10);
+    stroke(255, 0, 0);
+    line(341,192,22,192);
+    line(327,294,22,296);
+    homeBtn.draw();
+    strokeWeight(2);
+    fill(0, 0, 0);
+    ellipse(mouseX, mouseY, 15,15);
 };
 
 splashScreen();
@@ -353,7 +447,10 @@ splashScreen();
 // Draws The Screens (Scenes 0, 1, and 2)
 var draw = function() {
     if (currentScene===0) {splashScreen();}
-     else if (currentScene === 1) {gameScene();}
-    else if (currentScene === 2) {endGame();}
+     else if (currentScene === 1) {gameScene1();}
+          else if (currentScene === 2) {gameScene2();}
+                else if (currentScene === 3) {endGameW();}
+                        else if (currentScene === 4) {endGameL();}
+
         
 };
