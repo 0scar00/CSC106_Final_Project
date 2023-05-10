@@ -1,5 +1,9 @@
 var currentScene = 0;
+var playerPoints = 0;
 
+var numBitmoji = 1;  /*variable to set the number of bitmojis*/
+
+var charNum = 50;  //variable to set the number of characters
 
 /* RESIZABLE BITMOJI CODE*/
 var drawResizeBitmoji = function(bitmojiX,bitmojiY,bitmojiHeight){
@@ -140,6 +144,14 @@ strokeWeight(3);
 
 };
 
+
+   //Character function
+var char = function(x, y, h) {
+    image(getImage("avatars/starky-sapling"), x, y, h, h);
+};
+
+
+
 // Creates Start Button 
 var Button = function(config) {
     this.x = config.x || 0;
@@ -184,6 +196,47 @@ var StartButton = new Button({
     }
 });
 
+//Defines the home button
+var homeBtn = new Button({
+    x: 225,
+    y: 343,
+    width: 149,
+    height:44,
+    label: "Home",
+    onClick: function() {
+        //changes the scene to scene 0 which is the home screen
+        currentScene = 0;
+    }
+});
+
+
+
+    /*Arrays for the X,Y, and Speed of the bitmojis*/
+var xPositions = [];
+var yPositions = [];
+var bitmojiSpeed = [];
+
+//Arrays for the X,Y,and Speed of the character
+var xPositionsChar = [];
+var yPositionsChar = [];
+var bitmojiSpeedChar = [];
+
+/* For loop for the array's random values */
+for(var i = 0; i < numBitmoji; i++)
+{
+    xPositions.push(random(50,350));
+    yPositions.push(random(50,350));
+    bitmojiSpeed.push(round(random(0.6,2.4)));
+}
+
+/* For loop for the array's random values */
+for(var j = 0; j < charNum; j++)
+{
+    xPositionsChar.push(random(50,350));
+    yPositionsChar.push(random(50,350));
+    bitmojiSpeedChar.push(round(random(0.6,2.4)));
+}
+    
 
 // MouseClicked Function For Scene 0 and 1
 mouseClicked = function() {
@@ -192,11 +245,23 @@ mouseClicked = function() {
          StartButton.handleMouseClick();
     }
   
-   // check for score in Game 
-  else if (currentScene===1)
-   {
-       
-}   
+
+else if(currentScene===2) {
+        homeBtn.handleMouseClick();
+
+}
+
+for(var i = 0; i < xPositions.length; i++)
+        {
+            if(mouseX > xPositions[i] - 25 && 
+               mouseX < xPositions[i] + 25 &&
+               mouseY > yPositions[i] - 1 &&
+               mouseY < yPositions[i] + 50)
+               {
+                   yPositions[i] = -400;
+               }
+        }
+
 };
 
 var splashScreen = function()
@@ -224,30 +289,63 @@ var bitmojiText = function(){
     drawResizeBitmoji(36,168,103);
     drawMe(249,185,83);
 StartButton.draw();
+ellipse(mouseX, mouseY, 15,15);
+
 };
 
 
-// Code For Playing Screen (Scene 1)
-var playGame= function()
+/* Draws the moving bitmojis */
+var gameScene = function(array) 
 {
-background(94, 191, 255);
-fill(0, 0, 0);
+    background(255, 255, 255);
+    fill(255, 255, 255);
+    ellipse(mouseX,mouseY,20,20);
+  
+    for(var i = 0; i < xPositions.length; i++)
+    {
+        drawResizeBitmoji(xPositions[i],yPositions[i],31);
+        xPositions[i] += bitmojiSpeed[i];
+        
+        if(xPositions[i] > 400)
+        {
+            xPositions[i] = random(-40, 40);
+            xPositions[i] += bitmojiSpeed[i];
+            
+        }
+    } 
+    
+    
+    for(var j = 0; j < xPositionsChar.length; j++)
+    {
+        char(xPositionsChar[j],yPositionsChar[j],50);
+        xPositionsChar[j] += bitmojiSpeedChar[j];
+        
+        if(xPositionsChar[j] > 400)
+        {
+            xPositionsChar[j] = random(-40, 40);
+            xPositionsChar[j] += bitmojiSpeedChar[j];
+            
+        }
+    } 
 };
+
 
 
 // Code For End Screen (Scene 2)
 var endGame = function() {
     background(0, 0, 0);
-    textSize(74);
+    textSize(70);
     fill(255, 0, 0);
-    text("Game Over", 9,142, 383,176);
+    text("Game Over", 9,142, 389,176);
     textSize(33);
     text("Score:", 20, 300, 195, 100);
     strokeWeight(10);
     stroke(255, 0, 0);
-    line(387,224,15,223);
-    
+    line(368,224,15,223);
     line(114,346,22,346);
+    ellipse(mouseX, mouseY, 15,15);
+    homeBtn.draw();
+
 };
 
 splashScreen();
@@ -255,7 +353,7 @@ splashScreen();
 // Draws The Screens (Scenes 0, 1, and 2)
 var draw = function() {
     if (currentScene===0) {splashScreen();}
-     else if (currentScene === 1) {playGame();}
+     else if (currentScene === 1) {gameScene();}
     else if (currentScene === 2) {endGame();}
         
 };
